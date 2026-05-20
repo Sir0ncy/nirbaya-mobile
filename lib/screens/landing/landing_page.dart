@@ -15,18 +15,19 @@ class LandingPage extends StatelessWidget {
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Stack(
+          clipBehavior: Clip.none,
           children: [
             Align(
               alignment: Alignment.topCenter,
               child: Padding(
-                padding: const EdgeInsets.only(top: 40),
+                padding: const EdgeInsets.only(top: 60),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: const [
                     Center(
                       child: Image(
                         image: AssetImage('assets/images/nirbaya_logo.png'),
-                        width: 160,
+                        width: 200,
                         fit: BoxFit.contain,
                       ),
                     ),
@@ -34,15 +35,16 @@ class LandingPage extends StatelessWidget {
                 ),
               ),
             ),
-            Align(
-              alignment: Alignment.bottomCenter,
+            Positioned(
+              left: -120,
+              right: -120,
+              bottom: 0,
               child: Container(
                 height: bottomHeight,
-                width: double.infinity,
                 decoration: const BoxDecoration(
                   color: _brandBlue,
                   borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(320),
+                    top: Radius.circular(340),
                   ),
                 ),
                 child: Padding(
@@ -54,7 +56,7 @@ class LandingPage extends StatelessWidget {
                         'NIRBAYA',
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 20,
+                          fontSize: 30,
                           fontWeight: FontWeight.w700,
                           letterSpacing: 1.2,
                         ),
@@ -72,7 +74,7 @@ class LandingPage extends StatelessWidget {
                       ),
                       const SizedBox(height: 28),
                       SizedBox(
-                        width: double.infinity,
+                        width: 320,
                         child: ElevatedButton(
                           onPressed: () {
                             Navigator.of(context).pushNamed(AppRoutes.register);
@@ -89,14 +91,14 @@ class LandingPage extends StatelessWidget {
                             'Buat akun',
                             style: TextStyle(
                               fontSize: 14.5,
-                              fontWeight: FontWeight.w600,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
                       ),
                       const SizedBox(height: 12),
                       SizedBox(
-                        width: double.infinity,
+                        width: 320,
                         child: OutlinedButton(
                           onPressed: () {
                             Navigator.of(context).pushNamed(AppRoutes.login);
