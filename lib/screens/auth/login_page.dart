@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../routes/app_routes.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -161,9 +162,9 @@ class _LoginPageState extends State<LoginPage> {
                               width: double.infinity,
                               height: 51,
                               child: ElevatedButton(
-                                onPressed: () {
-                                  // Handle login action
-                                },
+                                  onPressed: () {
+                                    Navigator.of(context).pushReplacementNamed(AppRoutes.home);
+                                  },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: const Color(0xFF264167),
                                   shape: RoundedRectangleBorder(
@@ -197,7 +198,7 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                                 GestureDetector(
                                   onTap: () {
-                                    Navigator.pop(context);
+                                    Navigator.of(context).pushNamed(AppRoutes.register);
                                   },
                                   child: Text(
                                     'Daftar',

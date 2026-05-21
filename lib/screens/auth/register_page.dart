@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../routes/app_routes.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -203,9 +204,9 @@ class _RegisterPageState extends State<RegisterPage> {
                               width: double.infinity,
                               height: 51,
                               child: ElevatedButton(
-                                onPressed: () {
-                                  // Handle register/masuk action
-                                },
+                                  onPressed: () {
+                                    Navigator.of(context).pushReplacementNamed(AppRoutes.home);
+                                  },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: const Color(0xFF264167),
                                   shape: RoundedRectangleBorder(

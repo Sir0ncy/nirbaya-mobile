@@ -26,6 +26,14 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>Nirbaya needs camera access to capture report photos and videos.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Nirbaya needs photo library access to attach media to reports.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Nirbaya needs permission to save report media.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Nirbaya needs location access to attach incident coordinates.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
