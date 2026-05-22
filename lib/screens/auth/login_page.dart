@@ -18,6 +18,9 @@ class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
+  String? _emailError;
+  String? _passwordError;
+
   @override
   void dispose() {
     _emailController.dispose();
@@ -26,16 +29,41 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> handleLogin() async {
-    if (!_formKey.currentState!.validate()) {
+    bool isFormValid = true;
+
+    // Validasi Email
+    String emailValue = _emailController.text.trim();
+    if (emailValue.isEmpty) {
+      setState(() {
+        _emailError = 'Email tidak boleh kosong';
+      });
+      isFormValid = false;
+    } else {
+      final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
+      if (!emailRegex.hasMatch(emailValue)) {
+        setState(() {
+          _emailError = 'Format email tidak sesuai';
+        });
+        isFormValid = false;
+      }
+    }
+
+    // Validasi Password
+    String passwordValue = _passwordController.text;
+    if (passwordValue.isEmpty) {
+      setState(() {
+        _passwordError = 'Password tidak boleh kosong';
+      });
+      isFormValid = false;
+    }
+
+    if (!isFormValid) {
       return;
     }
 
     setState(() {
       _isLoading = true;
     });
-
-    final email = _emailController.text.trim();
-    final password = _passwordController.text;
 
     // MOCK API CALL
     await Future.delayed(const Duration(seconds: 2));
@@ -175,20 +203,13 @@ class _LoginPageState extends State<LoginPage> {
                                 hintText: 'Ketikan email Anda',
                                 keyboardType: TextInputType.emailAddress,
                                 controller: _emailController,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Email tidak boleh kosong';
+                                errorText: _emailError,
+                                onChanged: (value) {
+                                  if (_emailError != null) {
+                                    setState(() {
+                                      _emailError = null;
+                                    });
                                   }
-
-                                  final emailRegex = RegExp(
-                                    r'^[^@]+@[^@]+\.[^@]+',
-                                  );
-
-                                  if (!emailRegex.hasMatch(value)) {
-                                    return 'Format email tidak sesuai';
-                                  }
-
-                                  return null;
                                 },
                               ),
                               const SizedBox(height: 24),
@@ -199,12 +220,13 @@ class _LoginPageState extends State<LoginPage> {
                                 hintText: 'Ketikan password Anda',
                                 obscureText: _obscurePassword,
                                 controller: _passwordController,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Password tidak boleh kosong';
+                                errorText: _passwordError,
+                                onChanged: (value) {
+                                  if (_passwordError != null) {
+                                    setState(() {
+                                      _passwordError = null;
+                                    });
                                   }
-
-                                  return null;
                                 },
                                 suffixIcon: IconButton(
                                   icon: Icon(
@@ -245,7 +267,14 @@ class _LoginPageState extends State<LoginPage> {
                                             color: Colors.white,
                                           ),
                                         )
-                                      : Text('Masuk'),
+                                      : Text(
+                                          'Masuk',
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.white,
+                                          ),
+                                        ),
                                 ),
                               ),
                               const SizedBox(height: 16),
@@ -315,6 +344,7 @@ class _LoginPageState extends State<LoginPage> {
       style: GoogleFonts.poppins(fontSize: 14, color: Colors.black),
       decoration: InputDecoration(
         errorText: errorText,
+        errorMaxLines: 2, // Biar tulisan panjang tidak terpotong
         labelText: label,
         labelStyle: GoogleFonts.poppins(
           color: const Color(0xFF264167),

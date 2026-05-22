@@ -14,6 +14,7 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   bool _agreeToTerms = false;
   bool _obscurePassword = true;
+  bool _isLoading = false;
 
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
@@ -30,6 +31,89 @@ class _RegisterPageState extends State<RegisterPage> {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  Future<void> handleRegister() async {
+    bool isFormValid = true;
+
+    // Validasi Nama
+    if (_nameController.text.isEmpty) {
+      setState(() {
+        _nameError = 'Nama tidak boleh kosong';
+      });
+      isFormValid = false;
+    }
+
+    // Validasi Email
+    String emailValue = _emailController.text;
+    if (emailValue.isEmpty) {
+      setState(() {
+        _emailError = 'Email tidak boleh kosong';
+      });
+      isFormValid = false;
+    } else {
+      final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
+      if (!emailRegex.hasMatch(emailValue)) {
+        setState(() {
+          _emailError = 'Format email tidak sesuai';
+        });
+        isFormValid = false;
+      }
+    }
+
+    // Validasi Password
+    String passwordValue = _passwordController.text;
+    if (passwordValue.isEmpty) {
+      setState(() {
+        _passwordError = 'Password tidak boleh kosong';
+      });
+      isFormValid = false;
+    } else if (passwordValue.length < 8) {
+      setState(() {
+        _passwordError = 'Password harus minimal 8 karakter';
+      });
+      isFormValid = false;
+    } else {
+      // Cek kombinasi huruf, angka, dan simbol
+      final hasLetter = RegExp(r'[a-zA-Z]').hasMatch(passwordValue);
+      final hasNumber = RegExp(r'[0-9]').hasMatch(passwordValue);
+      final hasSymbol = RegExp(r'[!@#\$&*~`%\^()_+\-=\[\]{};' r"':" r'"\\|,.<>\/?]').hasMatch(passwordValue);
+      
+      if (!hasLetter || !hasNumber || !hasSymbol) {
+        setState(() {
+          _passwordError = 'Password harus mengandung huruf, angka, dan simbol';
+        });
+        isFormValid = false;
+      }
+    }
+
+    if (!_agreeToTerms) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Anda harus menyetujui syarat & kebijakan'),
+        ),
+      );
+      isFormValid = false;
+    }
+
+    if (!isFormValid) {
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    // MOCK API CALL
+    await Future.delayed(const Duration(seconds: 2));
+
+    setState(() {
+      _isLoading = false;
+    });
+
+    if (!mounted) return;
+
+    Navigator.pushReplacementNamed(context, AppRoutes.home);
   }
 
   @override
@@ -251,74 +335,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 width: double.infinity,
                                 height: 51,
                                 child: ElevatedButton(
-                                  onPressed: () {
-                                    bool isFormValid = true;
-
-                                    // Validasi Nama
-                                    if (_nameController.text.isEmpty) {
-                                      setState(() {
-                                        _nameError = 'Nama tidak boleh kosong';
-                                      });
-                                      isFormValid = false;
-                                    }
-
-                                    // Validasi Email
-                                    String emailValue = _emailController.text;
-                                    if (emailValue.isEmpty) {
-                                      setState(() {
-                                        _emailError = 'Email tidak boleh kosong';
-                                      });
-                                      isFormValid = false;
-                                    } else {
-                                      final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
-                                      if (!emailRegex.hasMatch(emailValue)) {
-                                        setState(() {
-                                          _emailError = 'Format email tidak sesuai';
-                                        });
-                                        isFormValid = false;
-                                      }
-                                    }
-
-                                    // Validasi Password
-                                    String passwordValue = _passwordController.text;
-                                    if (passwordValue.isEmpty) {
-                                      setState(() {
-                                        _passwordError = 'Password tidak boleh kosong';
-                                      });
-                                      isFormValid = false;
-                                    } else if (passwordValue.length < 8) {
-                                      setState(() {
-                                        _passwordError = 'Password harus minimal 8 karakter';
-                                      });
-                                      isFormValid = false;
-                                    } else {
-                                      // Cek kombinasi huruf, angka, dan simbol
-                                      final hasLetter = RegExp(r'[a-zA-Z]').hasMatch(passwordValue);
-                                      final hasNumber = RegExp(r'[0-9]').hasMatch(passwordValue);
-                                      final hasSymbol = RegExp(r'[!@#\$&*~`%\^()_+\-=\[\]{};' r"':" r'"\\|,.<>\/?]').hasMatch(passwordValue);
-                                      
-                                      if (!hasLetter || !hasNumber || !hasSymbol) {
-                                        setState(() {
-                                          _passwordError = 'Password harus mengandung huruf, angka, dan simbol';
-                                        });
-                                        isFormValid = false;
-                                      }
-                                    }
-
-                                    if (!_agreeToTerms) {
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                        const SnackBar(
-                                          content: Text('Anda harus menyetujui syarat & kebijakan'),
-                                        ),
-                                      );
-                                      isFormValid = false;
-                                    }
-
-                                    if (isFormValid) {
-                                      // Handle register action
-                                      Navigator.pushReplacementNamed(context, AppRoutes.home);
-                                    }
-                                  },
+                                  onPressed: _isLoading ? null : handleRegister,
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: const Color(0xFF264167),
                                     shape: RoundedRectangleBorder(
@@ -326,14 +343,23 @@ class _RegisterPageState extends State<RegisterPage> {
                                     ),
                                     elevation: 0,
                                   ),
-                                  child: Text(
-                                    'Daftar',
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.white,
-                                    ),
-                                  ),
+                                  child: _isLoading
+                                      ? const SizedBox(
+                                          width: 20,
+                                          height: 20,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2,
+                                            color: Colors.white,
+                                          ),
+                                        )
+                                      : Text(
+                                          'Daftar',
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.white,
+                                          ),
+                                        ),
                                 ),
                               ),
                             ],
