@@ -7,6 +7,7 @@ import '../screens/home/home_page.dart';
 import '../screens/landing/landing_page.dart';
 import '../screens/profile/profile_page.dart';
 import '../screens/reports/reports_page.dart';
+import '../screens/profile/edit_profile_page.dart';
 
 class AppRoutes {
   static const String landing = '/';
@@ -16,6 +17,7 @@ class AppRoutes {
   static const String reports = '/reports';
   static const String addReports = '/add-reports';
   static const String profile = '/profile';
+  static const String editProfile = '/edit-profile';
 
   static final Map<String, WidgetBuilder> routes = {
     landing: (context) => const LandingPage(),
@@ -25,5 +27,6 @@ class AppRoutes {
     reports: (context) => const ReportsPage(),
     addReports: (context) => const AddReportsPage(),
     profile: (context) => const ProfilePage(),
+    editProfile: (context) => const EditProfilePage(),
   };
 }
