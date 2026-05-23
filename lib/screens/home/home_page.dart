@@ -39,6 +39,24 @@ class _HomePageState extends State<HomePage> {
               child: const _MapPlaceholder(),
             ),
           ),
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            height: MediaQuery.of(context).padding.top + 10, // Adjusted height to be shorter
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    _navy.withAlpha(230), // Slightly darker at the very top (approx 0.9 opacity)
+                    _navy.withAlpha(0),
+                  ],
+                ),
+              ),
+            ),
+          ),
           SafeArea(
             child: Column(
               children: [
@@ -96,7 +114,9 @@ class _HomePageState extends State<HomePage> {
             right: 0,
             bottom: 0,
             child: Container(
-              padding: EdgeInsets.only(bottom: bottomInset + 20),
+              padding: EdgeInsets.only(
+                bottom: bottomInset > 0 ? bottomInset + 12 : 24,
+              ),
               decoration: const BoxDecoration(
                 color: _sheet,
                 borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
@@ -171,7 +191,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 18),
+                    const SizedBox(height: 40),
                     const Center(
                       child: NirbayaBottomNav(currentIndex: 0),
                     ),

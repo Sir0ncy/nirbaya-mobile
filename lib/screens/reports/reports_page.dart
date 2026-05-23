@@ -60,6 +60,20 @@ class _ReportsPageState extends State<ReportsPage> {
 
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: _headerBlue,
+        foregroundColor: Colors.white,
+        elevation: 4,
+        centerTitle: true,
+        title: const Text(
+          'Laporan Kejahatan',
+          style: TextStyle(fontWeight: FontWeight.w600),
+        ),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.of(context).pushReplacementNamed(AppRoutes.home),
+        ),
+      ),
       body: Stack(
         children: [
           SafeArea(
@@ -68,41 +82,6 @@ class _ReportsPageState extends State<ReportsPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.fromLTRB(16, 10, 16, 18),
-                    decoration: const BoxDecoration(
-                      color: _headerBlue,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Color(0x22000000),
-                          blurRadius: 8,
-                          offset: Offset(0, 3),
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      children: [
-                        // BackButton(color: Colors.white),
-                        IconButton(onPressed: () => Navigator.of(context).pushReplacementNamed(AppRoutes.home),
-                        icon: Icon(Icons.arrow_back, color: Colors.white,),
-                        ),
-                        Expanded(
-                          child: Center(
-                            child: Text(
-                              'Laporan Kejahatan',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 48),
-                      ],
-                    ),
-                  ),
                   const SizedBox(height: 18),
                   const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 33),
@@ -155,35 +134,6 @@ class _ReportsPageState extends State<ReportsPage> {
                       },
                     ),
                   ),
-                  const SizedBox(height: 20),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: SizedBox(
-                      width: double.infinity,
-                      height: 56,
-                      child: ElevatedButton.icon(
-                        onPressed: () {
-                          Navigator.of(context).pushNamed(AppRoutes.addReports);
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: _buttonBlue,
-                          foregroundColor: Colors.white,
-                          elevation: 0,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(28),
-                          ),
-                        ),
-                        icon: const Icon(Icons.add, size: 28),
-                        label: const Text(
-                          'Buat laporan',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
                 ],
               ),
             ),
@@ -193,10 +143,27 @@ class _ReportsPageState extends State<ReportsPage> {
             right: 0,
             bottom: 0,
             child: Padding(
-              padding: EdgeInsets.only(bottom: bottomInset + 16),
+              padding: EdgeInsets.only(
+                bottom: bottomInset > 0 ? bottomInset + 12 : 24,
+              ),
               child: const Center(
                 child: NirbayaBottomNav(currentIndex: 1),
               ),
+            ),
+          ),
+          // Floating Action Button di pojok kanan bawah
+          Positioned(
+            right: 16,
+            bottom: bottomInset > 0 ? bottomInset + 96 : 96, // Menyesuaikan agar berada di atas bottom nav
+            child: FloatingActionButton(
+              onPressed: () {
+                Navigator.of(context).pushNamed(AppRoutes.addReports);
+              },
+              backgroundColor: _buttonBlue,
+              foregroundColor: Colors.white,
+              elevation: 4,
+              shape: const CircleBorder(),
+              child: const Icon(Icons.add, size: 28),
             ),
           ),
         ],
